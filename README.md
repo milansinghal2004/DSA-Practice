@@ -2,11 +2,11 @@
 
 ## 📊 Stats
 
-- 📅 Total Days Practiced: **1**
-- 📝 Total Questions Solved: **1**
-- 🔥 Current Streak: **1 Days**
-- 🏆 Longest Streak: **1 Days**
-- 🕒 Last Updated: **2026-07-29 03:12**
+- 📅 Total Days Practiced: **5**
+- 📝 Total Questions Solved: **24**
+- 🔥 Current Streak: **4 Days**
+- 🏆 Longest Streak: **4 Days**
+- 🕒 Last Updated: **2026-08-01 15:54**
 
 ---
 
