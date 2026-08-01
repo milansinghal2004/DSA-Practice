@@ -94,15 +94,33 @@ lines.append(f"- 🕒 Last Updated: **{datetime.now().strftime('%Y-%m-%d %H:%M')
 lines.append("---\n")
 lines.append("## 📅 Daily Progress\n")
 
-lines.append("| Date | Questions | Count |")
-lines.append("|------|-----------|------:|")
+# Summary table
+lines.append("| Date | Count |")
+lines.append("|------|------:|")
 
 for folder in folders:
-    questions = ", ".join(folder["files"])
-    lines.append(
-        f"| {folder['date']} | {questions} | {folder['count']} |"
-    )
+    lines.append(f"| {folder['date']} | {folder['count']} |")
 
-lines.append("\n---")
+lines.append("")
+
+# Expandable sections
+for folder in folders:
+    count = folder["count"]
+    problem_word = "Problem" if count == 1 else "Problems"
+
+    lines.append("<details>")
+    lines.append(
+        f"<summary><strong>{folder['date']} ({count} {problem_word})</strong></summary>"
+    )
+    lines.append("")
+
+    for problem in folder["files"]:
+        lines.append(f"- ✅ {problem}")
+
+    lines.append("")
+    lines.append("</details>")
+    lines.append("")
+
+lines.append("---")
 
 Path("README.md").write_text("\n".join(lines), encoding="utf-8")

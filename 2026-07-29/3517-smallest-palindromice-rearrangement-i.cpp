@@ -1,0 +1,15 @@
+// 3517 leetcode SmallestPalindromiceRearrrangementI;String_Sort;BitHelp
+
+class Solution {
+public:
+    string smallestPalindrome(string s) {
+        int n = s.length();
+        int mid = n / 2;
+
+        sort(s.begin(), s.begin() + mid);
+        for(int i = 0; i < mid; i++) {
+            s[n - i - 1] = s[i];
+        }
+        return s;
+    }
+};
