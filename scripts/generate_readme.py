@@ -1,4 +1,5 @@
 import calendar
+import re
 from datetime import datetime
 from pathlib import Path
 
@@ -30,8 +31,41 @@ def format_problem_name(filename):
         title = " ".join(word.capitalize() for word in parts[1:])
         return f"#{number} {title}"
     except ValueError:
-        # Non-LeetCode filenames
         return filename.replace("-", " ").title()
+
+
+def get_question_key(filename):
+    """
+    Returns a unique key used to identify a question.
+
+    Examples:
+
+    001-two-sum.cpp
+    001-two-sum.py
+        -> same question
+
+    1861-rotating-box.cpp
+    1861-rotating-box.py
+        -> same question
+
+    gfg-next-greater-element.cpp
+        -> based on filename
+    """
+
+    stem = Path(filename).stem
+
+    # LeetCode-style filenames:
+    # 001-two-sum
+    # 1861-rotating-box
+    match = re.match(r"^(\d+)(?:-|$)", stem)
+
+    if match:
+        # Question number is the unique identifier
+        return f"leetcode:{int(match.group(1))}"
+
+    # Non-numbered problems:
+    # normalize the filename
+    return f"other:{stem.lower()}"
 
 
 # ---------------------------------------------------------
@@ -67,12 +101,36 @@ for month_folder in root.iterdir():
             ]
         )
 
+        # -------------------------------------------------
+        # Count UNIQUE questions
+        # -------------------------------------------------
+
+        question_keys = set()
+
+        for file in date_folder.iterdir():
+
+            if not file.is_file():
+                continue
+
+            if file.suffix.lower() not in SUPPORTED_EXTENSIONS:
+                continue
+
+            question_keys.add(
+                get_question_key(file.name)
+            )
+
         folders.append(
             {
                 "date": date,
                 "date_string": date_folder.name,
-                "count": len(files),
+
+                # IMPORTANT:
+                # Count unique questions, not files
+                "count": len(question_keys),
+
+                # Keep all files for reference
                 "files": files,
+
                 "month_folder": month_folder.name,
             }
         )
@@ -140,6 +198,8 @@ if dates:
 # Stats
 # ---------------------------------------------------------
 
+# IMPORTANT:
+# These now use UNIQUE QUESTION counts.
 total_questions = sum(
     folder["count"]
     for folder in folders
@@ -214,9 +274,11 @@ for year, month in months:
     # -----------------------------------------------------
 
     lines.append("<details>")
+
     lines.append(
         f"<summary><strong>📅 {month_name}</strong></summary>"
     )
+
     lines.append("")
 
     # -----------------------------------------------------
@@ -268,7 +330,9 @@ for year, month in months:
                 )
 
                 # Encode spaces in "Month Year"
-                month_folder = folder["month_folder"].replace(
+                month_folder = folder[
+                    "month_folder"
+                ].replace(
                     " ",
                     "%20"
                 )
@@ -299,7 +363,9 @@ for year, month in months:
     lines.append("")
 
     lines.append(
-        "<sub>Click a practice date to open that day's folder.</sub>"
+        "<sub>"
+        "Click a practice date to open that day's folder."
+        "</sub>"
     )
 
     lines.append("")
