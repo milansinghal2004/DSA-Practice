@@ -1,4 +1,3 @@
-
 from datetime import datetime
 from pathlib import Path
 
@@ -21,16 +20,26 @@ def format_problem_name(filename):
         title = " ".join(word.capitalize() for word in parts[1:])
         return f"#{number} {title}"
     except ValueError:
-        # Non-LeetCode filenames (e.g. gfg-next-greater-element)
+        # Non-LeetCode filenames
         return filename.replace("-", " ").title()
 
 
 folders = []
 
-# Find existing date folders.
-# No folders are created or modified by this script.
-for item in root.iterdir():
-    if item.is_dir():
+# ---------------------------------------------------------
+# Find date folders inside Month Year folders
+# ---------------------------------------------------------
+
+for month_folder in root.iterdir():
+
+    if not month_folder.is_dir():
+        continue
+
+    for item in month_folder.iterdir():
+
+        if not item.is_dir():
+            continue
+
         try:
             date = datetime.strptime(item.name, "%Y-%m-%d").date()
         except ValueError:
@@ -83,9 +92,7 @@ if dates:
 
         longest_streak = max(longest_streak, streak)
 
-    # Current streak (from latest date backwards)
-    current_streak = 1
-
+    # Current streak
     for i in range(len(dates) - 1, 0, -1):
         if (dates[i] - dates[i - 1]).days == 1:
             current_streak += 1
@@ -119,47 +126,38 @@ lines.append(
 )
 
 lines.append("---\n")
-lines.append("## 📅 Daily Progress\n")
 
 
 # ---------------------------------------------------------
-# Summary table
-# ---------------------------------------------------------
-
-lines.append("| Date | Count |")
-lines.append("|------|------:|")
-
-for folder in folders:
-    lines.append(f"| {folder['date_string']} | {folder['count']} |")
-
-lines.append("")
-
-
-# ---------------------------------------------------------
-# Group dates by Month / Year
+# Group by Month / Year
 # ---------------------------------------------------------
 
 current_month = None
 
 for folder in folders:
-    date = folder["date"]
 
+    date = folder["date"]
     month_key = (date.year, date.month)
 
-    # Add a new month heading whenever the month changes
     if month_key != current_month:
         current_month = month_key
 
-        lines.append(f"## 📆 {date.strftime('%B %Y')}\n")
+        lines.append(
+            f"## 📆 {date.strftime('%B %Y')}\n"
+        )
 
     count = folder["count"]
     problem_word = "Problem" if count == 1 else "Problems"
 
     lines.append("<details>")
+
     lines.append(
-        f"<summary><strong>{folder['date_string']} "
-        f"({count} {problem_word})</strong></summary>"
+        f"<summary><strong>"
+        f"{folder['date_string']} "
+        f"({count} {problem_word})"
+        f"</strong></summary>"
     )
+
     lines.append("")
 
     for problem in folder["files"]:
@@ -172,5 +170,7 @@ for folder in folders:
 
 lines.append("---")
 
-Path("README.md").write_text("\n".join(lines), encoding="utf-8")
-
+Path("README.md").write_text(
+    "\n".join(lines),
+    encoding="utf-8"
+)
