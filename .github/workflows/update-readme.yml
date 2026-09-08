@@ -1,4 +1,4 @@
-name: Update README
+name: Organize DSA Repository
 
 on:
   push:
@@ -9,26 +9,70 @@ permissions:
   contents: write
 
 jobs:
-  update:
+  organize:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.x"
 
-      - run: python scripts/generate_readme.py
+      # Move all root-level YYYY-MM-DD folders
+      # into their respective Month Year folders.
+      - name: Organize date folders
+        run: |
+          python - <<'PY'
+          from datetime import datetime
+          from pathlib import Path
+          import shutil
 
-      - name: Commit README
+          root = Path(".")
+
+          for item in sorted(root.iterdir()):
+              if not item.is_dir():
+                  continue
+
+              # Only process folders matching YYYY-MM-DD
+              try:
+                  date = datetime.strptime(item.name, "%Y-%m-%d")
+              except ValueError:
+                  continue
+
+              month_folder = root / date.strftime("%B %Y")
+
+              # Create the month folder only when needed
+              month_folder.mkdir(exist_ok=True)
+
+              destination = month_folder / item.name
+
+              # Already organized
+              if destination.exists():
+                  print(f"Skipping {item}: destination already exists")
+                  continue
+
+              print(f"Moving {item} -> {destination}")
+              shutil.move(str(item), str(destination))
+          PY
+
+      # Generate README from the newly organized structure
+      - name: Generate README
+        run: python scripts/generate_readme.py
+
+      # Commit repository organization + README changes
+      - name: Commit changes
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-          git add README.md
+          git add -A
 
           if ! git diff --cached --quiet; then
-            git commit -m "docs: update README"
+            git commit -m "chore: organize DSA practice by month"
             git push
+          else
+            echo "No changes to commit"
           fi
