@@ -1,7 +1,9 @@
+```python
 from datetime import datetime
 from pathlib import Path
 
 root = Path(".")
+
 
 def format_problem_name(filename):
     """
@@ -22,10 +24,18 @@ def format_problem_name(filename):
         # Non-LeetCode filenames (e.g. gfg-next-greater-element)
         return filename.replace("-", " ").title()
 
+
 folders = []
 
+# Find existing date folders.
+# No folders are created or modified by this script.
 for item in root.iterdir():
-    if item.is_dir() and item.name[:4].isdigit():
+    if item.is_dir():
+        try:
+            date = datetime.strptime(item.name, "%Y-%m-%d").date()
+        except ValueError:
+            continue
+
         files = sorted(
             [
                 format_problem_name(f.stem)
@@ -37,18 +47,23 @@ for item in root.iterdir():
 
         folders.append(
             {
-                "date": item.name,
+                "date": date,
+                "date_string": item.name,
                 "count": len(files),
                 "files": files,
             }
         )
 
+
+# Latest dates first
 folders.sort(key=lambda x: x["date"], reverse=True)
 
-dates = sorted(
-    datetime.strptime(folder["date"], "%Y-%m-%d").date()
-    for folder in folders
-)
+
+# ---------------------------------------------------------
+# Calculate streaks
+# ---------------------------------------------------------
+
+dates = sorted(folder["date"] for folder in folders)
 
 current_streak = 0
 longest_streak = 0
@@ -77,8 +92,18 @@ if dates:
         else:
             break
 
+
+# ---------------------------------------------------------
+# Stats
+# ---------------------------------------------------------
+
 total_questions = sum(x["count"] for x in folders)
 total_days = len(folders)
+
+
+# ---------------------------------------------------------
+# Generate README
+# ---------------------------------------------------------
 
 lines = []
 
@@ -89,28 +114,51 @@ lines.append(f"- 📅 Total Days Practiced: **{total_days}**")
 lines.append(f"- 📝 Total Questions Solved: **{total_questions}**")
 lines.append(f"- 🔥 Current Streak: **{current_streak} Days**")
 lines.append(f"- 🏆 Longest Streak: **{longest_streak} Days**")
-lines.append(f"- 🕒 Last Updated: **{datetime.now().strftime('%Y-%m-%d %H:%M')}**\n")
+lines.append(
+    f"- 🕒 Last Updated: **{datetime.now().strftime('%Y-%m-%d %H:%M')}**\n"
+)
 
 lines.append("---\n")
 lines.append("## 📅 Daily Progress\n")
 
+
+# ---------------------------------------------------------
 # Summary table
+# ---------------------------------------------------------
+
 lines.append("| Date | Count |")
 lines.append("|------|------:|")
 
 for folder in folders:
-    lines.append(f"| {folder['date']} | {folder['count']} |")
+    lines.append(f"| {folder['date_string']} | {folder['count']} |")
 
 lines.append("")
 
-# Expandable sections
+
+# ---------------------------------------------------------
+# Group dates by Month / Year
+# ---------------------------------------------------------
+
+current_month = None
+
 for folder in folders:
+    date = folder["date"]
+
+    month_key = (date.year, date.month)
+
+    # Add a new month heading whenever the month changes
+    if month_key != current_month:
+        current_month = month_key
+
+        lines.append(f"## 📆 {date.strftime('%B %Y')}\n")
+
     count = folder["count"]
     problem_word = "Problem" if count == 1 else "Problems"
 
     lines.append("<details>")
     lines.append(
-        f"<summary><strong>{folder['date']} ({count} {problem_word})</strong></summary>"
+        f"<summary><strong>{folder['date_string']} "
+        f"({count} {problem_word})</strong></summary>"
     )
     lines.append("")
 
@@ -121,6 +169,8 @@ for folder in folders:
     lines.append("</details>")
     lines.append("")
 
+
 lines.append("---")
 
 Path("README.md").write_text("\n".join(lines), encoding="utf-8")
+```
