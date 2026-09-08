@@ -6,7 +6,7 @@
 - 📝 Total Questions Solved: **229**
 - 🔥 Current Streak: **2 Days**
 - 🏆 Longest Streak: **13 Days**
-- 🕒 Last Updated: **2026-09-08 09:37**
+- 🕒 Last Updated: **2026-09-08 09:54**
 
 ---
 
@@ -44,6 +44,8 @@
 | 2026-07-29 | 7 |
 | 2026-07-28 | 1 |
 | 2026-07-27 | 2 |
+
+## 📆 August 2026
 
 <details>
 <summary><strong>2026-08-30 (7 Problems)</strong></summary>
@@ -399,6 +401,8 @@
 - ✅ #49 Grp Anagram
 
 </details>
+
+## 📆 July 2026
 
 <details>
 <summary><strong>2026-07-31 (7 Problems)</strong></summary>
