@@ -156,6 +156,7 @@ lines = []
 
 lines.append("# 🚀 DSA Practice\n")
 
+
 # ---------------------------------------------------------
 # Stats
 # ---------------------------------------------------------
@@ -189,8 +190,6 @@ lines.append("---\n")
 # Monthly Calendars
 # ---------------------------------------------------------
 
-# Get unique months containing practice days.
-# Newest month first.
 months = sorted(
     {
         (date.year, date.month)
@@ -198,7 +197,6 @@ months = sorted(
     },
     reverse=True
 )
-
 
 calendar.setfirstweekday(calendar.MONDAY)
 
@@ -211,9 +209,20 @@ for year, month in months:
         1
     ).strftime("%B %Y")
 
-    lines.append(f"## 📅 {month_name}\n")
+    # -----------------------------------------------------
+    # Collapsible Month
+    # -----------------------------------------------------
 
-    # Calendar header
+    lines.append("<details>")
+    lines.append(
+        f"<summary><strong>📅 {month_name}</strong></summary>"
+    )
+    lines.append("")
+
+    # -----------------------------------------------------
+    # Calendar
+    # -----------------------------------------------------
+
     lines.append(
         "| Mon | Tue | Wed | Thu | Fri | Sat | Sun |"
     )
@@ -233,7 +242,7 @@ for year, month in months:
 
         for day in week:
 
-            # Empty cell before/after the month
+            # Empty cell before/after month
             if day == 0:
                 cells.append(" ")
                 continue
@@ -258,7 +267,7 @@ for year, month in months:
                     else "Qs"
                 )
 
-                # URL encode the space in "Month Year"
+                # Encode spaces in "Month Year"
                 month_folder = folder["month_folder"].replace(
                     " ",
                     "%20"
@@ -269,8 +278,9 @@ for year, month in months:
                     f"{folder['date_string']}/"
                 )
 
+                # No green box.
+                # Date itself is clickable.
                 cell = (
-                    f"🟩 "
                     f"[**{day}**]({folder_url})"
                     f"<br>"
                     f"`{count} {problem_word}`"
@@ -279,6 +289,7 @@ for year, month in months:
                 cells.append(cell)
 
             else:
+
                 cells.append(str(day))
 
         lines.append(
@@ -288,8 +299,14 @@ for year, month in months:
     lines.append("")
 
     lines.append(
-        "> 🟩 = Practice Day · Number = Questions Solved\n"
+        "<sub>Click a practice date to open that day's folder.</sub>"
     )
+
+    lines.append("")
+
+    # Close month
+    lines.append("</details>")
+    lines.append("")
 
 
 # ---------------------------------------------------------
@@ -301,6 +318,7 @@ lines.append("---\n")
 lines.append(
     "Built automatically from the repository's daily practice folders."
 )
+
 
 # ---------------------------------------------------------
 # Write README
