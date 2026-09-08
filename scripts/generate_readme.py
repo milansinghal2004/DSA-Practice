@@ -173,4 +173,4 @@ for folder in folders:
 lines.append("---")
 
 Path("README.md").write_text("\n".join(lines), encoding="utf-8")
-```
+
