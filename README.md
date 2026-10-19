@@ -2,11 +2,11 @@
 
 ## 📊 Stats
 
-- 📅 Total Days Practiced: **63**
-- 📝 Total Questions Solved: **458**
-- 🔥 Current Streak: **7 Days**
+- 📅 Total Days Practiced: **69**
+- 📝 Total Questions Solved: **496**
+- 🔥 Current Streak: **5 Days**
 - 🏆 Longest Streak: **13 Days**
-- 🕒 Last Updated: **2026-10-07 08:23**
+- 🕒 Last Updated: **2026-10-19 06:01**
 
 ---
 
@@ -16,8 +16,8 @@
 | Mon | Tue | Wed | Thu | Fri | Sat | Sun |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 |   |   |   | [**1**](./October/2026-10-01/)<br>`7 Qs` | [**2**](./October/2026-10-02/)<br>`7 Qs` | [**3**](./October/2026-10-03/)<br>`5 Qs` | [**4**](./October/2026-10-04/)<br>`8 Qs` |
-| [**5**](./October/2026-10-05/)<br>`7 Qs` | [**6**](./October/2026-10-06/)<br>`9 Qs` | 7 | 8 | 9 | 10 | 11 |
-| 12 | 13 | 14 | 15 | 16 | 17 | 18 |
+| [**5**](./October/2026-10-05/)<br>`7 Qs` | [**6**](./October/2026-10-06/)<br>`9 Qs` | [**7**](./October/2026-10-07/)<br>`6 Qs` | 8 | 9 | 10 | [**11**](./October/2026-10-11/)<br>`5 Qs` |
+| [**12**](./October/2026-10-12/)<br>`7 Qs` | [**13**](./October/2026-10-13/)<br>`7 Qs` | [**14**](./October/2026-10-14/)<br>`7 Qs` | [**15**](./October/2026-10-15/)<br>`6 Qs` | 16 | 17 | 18 |
 | 19 | 20 | 21 | 22 | 23 | 24 | 25 |
 | 26 | 27 | 28 | 29 | 30 | 31 |   |
 
